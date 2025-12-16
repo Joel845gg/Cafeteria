@@ -99,7 +99,7 @@ Inicia el servidor con el siguiente comando:
 node server.js
 ````
 
-## El servidor debería estar corriendo en http://localhost:5000.
+El servidor debería estar corriendo en http://localhost:5000.
 
 # Instalación del Frontend (React)
 ## Crear el Proyecto Frontend
