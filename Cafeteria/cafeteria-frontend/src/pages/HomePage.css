@@ -1,0 +1,493 @@
+.home-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fffaf0 0%, #ffe4e1 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Muchas flores cayendo */
+.sakura-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sakura-falling {
+    position: absolute;
+    top: -50px;
+    background: #ffb7c5;
+    border-radius: 50% 50% 50% 0;
+    opacity: 0.7;
+    animation: falling 15s linear infinite;
+    filter: blur(0.5px);
+    transform-origin: center;
+}
+
+/* Diferentes tamaños y velocidades */
+.sakura-falling.delay-0 { animation-duration: 12s; }
+.sakura-falling.delay-1 { animation-duration: 18s; animation-delay: 3s; }
+.sakura-falling.delay-2 { animation-duration: 15s; animation-delay: 6s; }
+.sakura-falling.delay-3 { animation-duration: 20s; animation-delay: 9s; }
+.sakura-falling.delay-4 { animation-duration: 14s; animation-delay: 12s; }
+
+@keyframes falling {
+    0% {
+        transform: translateY(-50px) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+        transform: rotate(45deg) scale(1);
+    }
+    90% {
+        opacity: 0.6;
+        transform: rotate(180deg) scale(0.9);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+.home-container {
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(183, 110, 121, 0.2);
+    position: relative;
+    z-index: 1;
+    border: 2px solid #ffb7c5;
+    text-align: center;
+}
+
+/* Logo */
+.logo-section {
+    margin-bottom: 2rem;
+}
+
+.logo-image {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1rem;
+    filter: drop-shadow(2px 2px 4px rgba(183, 110, 121, 0.3));
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #808080;
+    letter-spacing: 5px;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* Botón Ver Menú */
+.main-nav {
+    margin: 2rem 0;
+}
+
+.nav-btn.primary {
+    background: linear-gradient(135deg, #dc143c, #b76e79);
+    color: white;
+    border: none;
+    padding: 1.2rem 3rem;
+    border-radius: 30px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+    min-width: 250px;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn.primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: 0.5s;
+}
+
+.nav-btn.primary:hover {
+    background: linear-gradient(135deg, #b76e79, #dc143c);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(220, 20, 60, 0.4);
+}
+
+.nav-btn.primary:hover::before {
+    left: 100%;
+}
+
+/* Misión y Visión (se mantiene igual) */
+.mission-vision-section {
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mission-card, .vision-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: left;
+    border-left: 4px solid #dc143c;
+    box-shadow: 0 5px 20px rgba(183, 110, 121, 0.1);
+}
+
+.vision-card {
+    border-left-color: #6b8e23;
+}
+
+.section-title {
+    color: #b76e79;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.mission-text, .vision-text {
+    color: #2f4f4f;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Botón Generar QR con estilo especial */
+.qr-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ffe4e1;
+}
+
+.qr-button {
+    background: linear-gradient(135deg, #6b8e23, #9acd32);
+    color: white;
+    border: none;
+    padding: 1.5rem 2.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 250px;
+    box-shadow: 0 10px 30px rgba(107, 142, 35, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.qr-button:hover {
+    background: linear-gradient(135deg, #9acd32, #6b8e23);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(107, 142, 35, 0.4);
+}
+
+.qr-button:hover::before {
+    transform: translateX(100%);
+}
+
+.qr-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+.qr-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.qr-subtext {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .home-container {
+        padding: 2rem 1rem;
+    }
+    
+    .logo-image {
+        max-width: 250px;
+    }
+    
+    .nav-btn.primary {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem 2rem;
+    }
+    
+    .qr-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+/* Sección de características - DOS CAJITAS SEPARADAS */
+.features-section {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+/* Estilos base para ambas cajitas */
+.feature-box {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    box-shadow: 0 10px 30px rgba(183, 110, 121, 0.15);
+}
+
+.feature-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    border-radius: 20px 20px 0 0;
+}
+
+/* Cajita Café Premium */
+.premium-box {
+    background: linear-gradient(145deg, #fffaf0, #fff5f5);
+    border-color: #ffb7c5;
+}
+
+.premium-box::before {
+    background: linear-gradient(90deg, #8b4513, #d2691e);
+}
+
+.premium-box:hover {
+    transform: translateY(-10px) rotate(-1deg);
+    box-shadow: 0 20px 40px rgba(139, 69, 19, 0.2);
+    border-color: #d2691e;
+}
+
+/* Cajita Desayunos */
+.breakfast-box {
+    background: linear-gradient(145deg, #f5fff0, #f0fff5);
+    border-color: #9acd32;
+}
+
+.breakfast-box::before {
+    background: linear-gradient(90deg, #6b8e23, #9acd32);
+}
+
+.breakfast-box:hover {
+    transform: translateY(-10px) rotate(1deg);
+    box-shadow: 0 20px 40px rgba(107, 142, 35, 0.2);
+    border-color: #6b8e23;
+}
+
+/* Header de cada cajita */
+.feature-header {
+    margin-bottom: 1.5rem;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.feature-box:hover .feature-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.premium-icon {
+    color: #8b4513;
+    text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.2);
+}
+
+.breakfast-icon {
+    color: #6b8e23;
+    text-shadow: 2px 2px 4px rgba(107, 142, 35, 0.2);
+}
+
+/* Título */
+.feature-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+
+
+.feature-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.premium-box .feature-title::after {
+    background: linear-gradient(90deg, #8b4513, #d2691e);
+}
+
+.breakfast-box .feature-title::after {
+    background: linear-gradient(90deg, #6b8e23, #9acd32);
+}
+
+/* Descripción */
+.feature-description {
+    color: #2f4f4f;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+
+/* Decoración */
+.feature-decoration {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.decoration-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.premium-box .decoration-dot {
+    background: #d2691e;
+}
+
+.breakfast-box .decoration-dot {
+    background: #9acd32;
+}
+
+.feature-box:hover .decoration-dot:nth-child(1) {
+    transform: translateY(-5px);
+    opacity: 1;
+}
+
+.feature-box:hover .decoration-dot:nth-child(2) {
+    transform: translateY(-5px);
+    opacity: 1;
+    animation-delay: 0.1s;
+}
+
+.feature-box:hover .decoration-dot:nth-child(3) {
+    transform: translateY(-5px);
+    opacity: 1;
+    animation-delay: 0.2s;
+}
+
+/* Efectos de brillo al hover */
+.feature-box::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+
+.feature-box:hover::after {
+    transform: rotate(30deg) translate(20%, 20%);
+}
+
+/* Responsive para las cajitas */
+@media (max-width: 768px) {
+    .features-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .feature-box {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .feature-title {
+        font-size: 1.6rem;
+    }
+    
+    .feature-description {
+        font-size: 1rem;
+    }
+}
+/* Animación de entrada para las cajitas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-box {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.premium-box {
+    animation-delay: 0.2s;
+}
+
+.breakfast-box {
+    animation-delay: 0.4s;
+}
