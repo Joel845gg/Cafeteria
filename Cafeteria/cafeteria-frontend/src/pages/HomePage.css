@@ -1,3 +1,7 @@
+/* ==================== */
+/* PÉTALOS SAKURA MUY LENTOS */
+/* ==================== */
+
 .home-page {
     min-height: 100vh;
     background: linear-gradient(135deg, #fffaf0 0%, #ffe4e1 100%);
@@ -9,7 +13,7 @@
     padding: 2rem;
 }
 
-/* Muchas flores cayendo */
+/* Contenedor de pétalos */
 .sakura-background {
     position: absolute;
     top: 0;
@@ -18,44 +22,164 @@
     bottom: 0;
     pointer-events: none;
     overflow: hidden;
+    z-index: 0;
 }
 
-.sakura-falling {
+/* Pétalo base */
+.sakura-petal {
     position: absolute;
-    top: -50px;
-    background: #ffb7c5;
+    top: -150px;
+    /* Empezar más arriba */
+    left: var(--left);
+    width: var(--size);
+    height: var(--size);
+    opacity: var(--opacity);
+    animation:
+        sakura-fall var(--duration) linear var(--delay) infinite;
+    transform: rotate(var(--rotate));
+    z-index: 0;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Suavizado */
+}
+
+/* Forma del pétalo */
+.petal-shape {
+    width: 100%;
+    height: 100%;
     border-radius: 50% 50% 50% 0;
-    opacity: 0.7;
-    animation: falling 15s linear infinite;
-    filter: blur(0.5px);
-    transform-origin: center;
+    transform: rotate(45deg);
+    position: relative;
+    animation: petal-rotate calc(var(--duration) * 0.8) linear var(--delay) infinite;
 }
 
-/* Diferentes tamaños y velocidades */
-.sakura-falling.delay-0 { animation-duration: 12s; }
-.sakura-falling.delay-1 { animation-duration: 18s; animation-delay: 3s; }
-.sakura-falling.delay-2 { animation-duration: 15s; animation-delay: 6s; }
-.sakura-falling.delay-3 { animation-duration: 20s; animation-delay: 9s; }
-.sakura-falling.delay-4 { animation-duration: 14s; animation-delay: 12s; }
+/* Diferentes tipos de pétalos */
+.petal-type-0 .petal-shape {
+    background: #ffb7c5;
+    box-shadow:
+        0 0 12px rgba(255, 183, 197, 0.5),
+        inset 0 0 8px rgba(255, 255, 255, 0.3);
+    filter: blur(0.6px);
+}
 
-@keyframes falling {
+.petal-type-1 .petal-shape {
+    background: #ffa8ba;
+    box-shadow:
+        0 0 10px rgba(255, 168, 186, 0.4),
+        inset 0 0 6px rgba(255, 255, 255, 0.2);
+    filter: blur(0.4px);
+}
+
+.petal-type-2 .petal-shape {
+    background: #ffc6d0;
+    box-shadow:
+        0 0 8px rgba(255, 198, 208, 0.3),
+        inset 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Efecto de brillo */
+.petal-shape::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 25%;
+    height: 25%;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    filter: blur(1px);
+}
+
+/* ANIMACIÓN PRINCIPAL - MUY LENTA */
+/* ANIMACIÓN PRINCIPAL - MUY LENTA Y SUAVE */
+@keyframes sakura-fall {
     0% {
-        transform: translateY(-50px) rotate(0deg) scale(0.8);
+        transform:
+            translateY(-150px) translateX(0) rotate(var(--rotate));
         opacity: 0;
     }
+
+    2% {
+        opacity: calc(var(--opacity) * 0.3);
+    }
+
+    5% {
+        opacity: var(--opacity);
+        transform:
+            translateY(-130px) translateX(calc(10px * var(--sway))) rotate(calc(var(--rotate) + 15deg));
+    }
+
     10% {
-        opacity: 0.8;
-        transform: rotate(45deg) scale(1);
+        transform:
+            translateY(-100px) translateX(calc(20px * var(--sway))) rotate(calc(var(--rotate) + 30deg));
     }
+
+    20% {
+        transform:
+            translateY(-50px) translateX(calc(30px * var(--sway))) rotate(calc(var(--rotate) + 60deg));
+    }
+
+    30% {
+        transform:
+            translateY(0) translateX(calc(40px * var(--sway))) rotate(calc(var(--rotate) + 90deg));
+    }
+
+    40% {
+        transform:
+            translateY(calc(10vh)) translateX(calc(50px * var(--sway))) rotate(calc(var(--rotate) + 120deg));
+    }
+
+    50% {
+        transform:
+            translateY(calc(20vh)) translateX(calc(60px * var(--sway))) rotate(calc(var(--rotate) + 150deg));
+    }
+
+    60% {
+        transform:
+            translateY(calc(35vh)) translateX(calc(70px * var(--sway))) rotate(calc(var(--rotate) + 180deg));
+    }
+
+    70% {
+        transform:
+            translateY(calc(50vh)) translateX(calc(80px * var(--sway))) rotate(calc(var(--rotate) + 210deg));
+    }
+
+    80% {
+        transform:
+            translateY(calc(65vh)) translateX(calc(90px * var(--sway))) rotate(calc(var(--rotate) + 240deg));
+    }
+
     90% {
-        opacity: 0.6;
-        transform: rotate(180deg) scale(0.9);
+        transform:
+            translateY(calc(80vh)) translateX(calc(100px * var(--sway))) rotate(calc(var(--rotate) + 270deg));
+        opacity: var(--opacity);
     }
+
+    95% {
+        opacity: calc(var(--opacity) * 0.7);
+    }
+
     100% {
-        transform: translateY(100vh) rotate(360deg) scale(0.8);
+        transform:
+            translateY(calc(100vh + 200px)) translateX(calc(110px * var(--sway))) rotate(calc(var(--rotate) + 300deg));
         opacity: 0;
     }
 }
+
+/* Rotación lenta del pétalo */
+@keyframes petal-rotate {
+    0% {
+        transform: rotate(45deg);
+    }
+
+    100% {
+        transform: rotate(405deg);
+        /* 1 vuelta completa */
+    }
+}
+
+/* ==================== */
+/* CONTENIDO PRINCIPAL */
+/* ==================== */
 
 .home-container {
     max-width: 800px;
@@ -73,13 +197,22 @@
 /* Logo */
 .logo-section {
     margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .logo-image {
-    max-width: 300px;
+    max-width: 350px;
+    width: 100%;
     height: auto;
     margin-bottom: 1rem;
-    filter: drop-shadow(2px 2px 4px rgba(183, 110, 121, 0.3));
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(183, 110, 121, 0.3);
+    border: 3px solid white;
+    background: white;
+    padding: 10px;
+    object-fit: contain;
 }
 
 .subtitle {
@@ -88,6 +221,23 @@
     letter-spacing: 5px;
     margin-bottom: 2rem;
     font-weight: 300;
+    text-align: center;
+}
+
+/* Hero message */
+.hero-message {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #fff5f5, #fff0f5);
+    border-radius: 15px;
+    border-left: 4px solid #ffb7c5;
+}
+
+.tagline {
+    font-size: 1.3rem;
+    color: #2f4f4f;
+    line-height: 1.8;
+    font-weight: 400;
 }
 
 /* Botón Ver Menú */
@@ -132,125 +282,26 @@
     left: 100%;
 }
 
-/* Misión y Visión (se mantiene igual) */
-.mission-vision-section {
-    margin: 3rem 0;
+/* Separador */
+.divider {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.mission-card, .vision-card {
-    background: white;
-    border-radius: 15px;
-    padding: 2rem;
-    text-align: left;
-    border-left: 4px solid #dc143c;
-    box-shadow: 0 5px 20px rgba(183, 110, 121, 0.1);
-}
-
-.vision-card {
-    border-left-color: #6b8e23;
-}
-
-.section-title {
-    color: #b76e79;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-}
-
-.mission-text, .vision-text {
-    color: #2f4f4f;
-    line-height: 1.8;
-    font-size: 1rem;
-}
-
-/* Botón Generar QR con estilo especial */
-.qr-section {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 2px solid #ffe4e1;
-}
-
-.qr-button {
-    background: linear-gradient(135deg, #6b8e23, #9acd32);
-    color: white;
-    border: none;
-    padding: 1.5rem 2.5rem;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    min-width: 250px;
-    box-shadow: 0 10px 30px rgba(107, 142, 35, 0.3);
-    position: relative;
-    overflow: hidden;
+    justify-content: center;
+    margin: 2rem 0;
 }
 
-.qr-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
+.divider-line {
+    height: 1px;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, #ffb7c5, transparent);
 }
 
-.qr-button:hover {
-    background: linear-gradient(135deg, #9acd32, #6b8e23);
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(107, 142, 35, 0.4);
+.divider-icon {
+    margin: 0 1.5rem;
+    font-size: 1.5rem;
+    color: #b76e79;
 }
 
-.qr-button:hover::before {
-    transform: translateX(100%);
-}
-
-.qr-icon {
-    font-size: 2.5rem;
-    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.2));
-}
-
-.qr-text {
-    font-size: 1.3rem;
-    font-weight: 700;
-}
-
-.qr-subtext {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    font-weight: 400;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .home-container {
-        padding: 2rem 1rem;
-    }
-    
-    .logo-image {
-        max-width: 250px;
-    }
-    
-    .nav-btn.primary {
-        width: 100%;
-        max-width: 300px;
-        padding: 1rem 2rem;
-    }
-    
-    .qr-button {
-        width: 100%;
-        max-width: 300px;
-    }
-}
 /* Sección de características - DOS CAJITAS SEPARADAS */
 .features-section {
     display: flex;
@@ -353,7 +404,19 @@
     display: inline-block;
 }
 
+.premium-box .feature-title {
+    color: #8b4513;
+    background: linear-gradient(135deg, #8b4513, #d2691e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
+.breakfast-box .feature-title {
+    color: #6b8e23;
+    background: linear-gradient(135deg, #6b8e23, #9acd32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 .feature-title::after {
     content: '';
@@ -432,12 +495,10 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(
-        to bottom right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0) 100%
-    );
+    background: linear-gradient(to bottom right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 100%);
     transform: rotate(30deg);
     transition: transform 0.6s;
     pointer-events: none;
@@ -447,47 +508,163 @@
     transform: rotate(30deg) translate(20%, 20%);
 }
 
-/* Responsive para las cajitas */
+/* Misión y Visión */
+.mission-vision-section {
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mission-card,
+.vision-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: left;
+    border-left: 4px solid #dc143c;
+    box-shadow: 0 5px 20px rgba(183, 110, 121, 0.1);
+}
+
+.vision-card {
+    border-left-color: #6b8e23;
+}
+
+.section-title {
+    color: #b76e79;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.mission-text,
+.vision-text {
+    color: #2f4f4f;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Botón Generar QR */
+.qr-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ffe4e1;
+}
+
+.qr-button {
+    background: linear-gradient(135deg, #6b8e23, #9acd32);
+    color: white;
+    border: none;
+    padding: 1.5rem 2.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 250px;
+    box-shadow: 0 10px 30px rgba(107, 142, 35, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.qr-button:hover {
+    background: linear-gradient(135deg, #9acd32, #6b8e23);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(107, 142, 35, 0.4);
+}
+
+.qr-button:hover::before {
+    transform: translateX(100%);
+}
+
+.qr-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+.qr-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.qr-subtext {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
+    .home-container {
+        padding: 2rem 1rem;
+    }
+
+    .logo-image {
+        max-width: 280px;
+        padding: 8px;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        letter-spacing: 3px;
+    }
+
+    .nav-btn.primary {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem 2rem;
+    }
+
     .features-section {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .feature-box {
         width: 100%;
         max-width: 100%;
     }
-    
+
     .feature-title {
         font-size: 1.6rem;
     }
-    
+
     .feature-description {
         font-size: 1rem;
     }
-}
-/* Animación de entrada para las cajitas */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .qr-button {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
-.feature-box {
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
-}
+@media (max-width: 480px) {
+    .logo-image {
+        max-width: 250px;
+    }
 
-.premium-box {
-    animation-delay: 0.2s;
-}
+    .subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
 
-.breakfast-box {
-    animation-delay: 0.4s;
+    .feature-title {
+        font-size: 1.4rem;
+    }
 }

@@ -8,18 +8,37 @@ function HomePage() {
 
     return (
         <div className="home-page">
-            {/* Fondo con muchas flores cayendo */}
+            {/* Fondo con flores - TODAS aparecen en primeros 2 segundos */}
             <div className="sakura-background">
-                {[...Array(15)].map((_, i) => (
-                    <div key={i} className={`sakura-falling delay-${i % 5}`} 
-                         style={{ 
-                             left: `${(i * 7) % 100}%`,
-                             animationDelay: `${i * 0.7}s`,
-                             width: `${10 + (i % 10)}px`,
-                             height: `${10 + (i % 10)}px`
-                         }}>
-                    </div>
-                ))}
+                {/* 70 pétalos - aparecen en 0-2 segundos, caen en 2-4 minutos */}
+                {[...Array(70)].map((_, i) => {
+                    // Propiedades aleatorias para cada pétalo
+                    const left = Math.random() * 100; // Posición horizontal aleatoria
+                    const delay = Math.random() * 2; // 0-2 segundos (aparecen en primeros 2 segundos)
+                    const duration = 120 + Math.random() * 120; // 2-4 minutos de caída (MUY LENTO)
+                    const size = 10 + Math.random() * 20; // 10-30px
+                    const opacity = 0.15 + Math.random() * 0.35; // 0.15-0.5
+                    const sway = 0.3 + Math.random() * 0.7; // 0.3-1.0 para vaivén
+                    const rotate = Math.random() * 360; // Rotación inicial
+                    
+                    return (
+                        <div 
+                            key={i}
+                            className={`sakura-petal petal-type-${i % 3}`}
+                            style={{
+                                '--left': `${left}%`,
+                                '--delay': `${delay.toFixed(2)}s`, // 2 decimales para precisión
+                                '--duration': `${duration}s`,
+                                '--size': `${size}px`,
+                                '--opacity': opacity,
+                                '--sway': sway,
+                                '--rotate': `${rotate}deg`,
+                            }}
+                        >
+                            <div className="petal-shape"></div>
+                        </div>
+                    );
+                })}
             </div>
             
             <div className="home-container">
@@ -42,7 +61,7 @@ function HomePage() {
                     </p>
                 </div>
 
-                {/* Solo el botón Ver Menú */}
+                {/* Botón Ver Menú */}
                 <div className="main-nav">
                     <button 
                         className="nav-btn primary"
@@ -55,6 +74,7 @@ function HomePage() {
                 {/* Separador decorativo */}
                 <div className="divider">
                     <div className="divider-line"></div>
+                    <div className="divider-icon">☕</div>
                     <div className="divider-line"></div>
                 </div>
 
