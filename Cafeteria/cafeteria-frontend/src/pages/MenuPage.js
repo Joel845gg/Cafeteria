@@ -27,7 +27,7 @@ const categories = [
     { id: 9, nombre: 'Aguas & Gaseosas', icon: '💧' },
     { id: 10, nombre: 'Jugos & Limonadas', icon: '🍹' },
     { id: 11, nombre: 'Crepes & Waffles', icon: '🧇' },
-    { id: 12, nombre: 'Adicionales', icon: '➕' }
+    { id: 12, nombre: 'Adicionales', icon: '' }
 ];
 
 // Datos completos del menú con separadores implementados
@@ -683,7 +683,7 @@ function MenuPage() {
 
     // Obtener nombre de categoría activa
     const activeCategoryName = categories.find(c => c.id === activeCategory)?.nombre || 'Menú';
-    const activeCategoryIcon = categories.find(c => c.id === activeCategory)?.icon || '📋';
+    const activeCategoryIcon = categories.find(c => c.id === activeCategory)?.icon || '';
 
     // Componente para el separador de subcategorías
     const SubcategorySeparator = ({ titulo, icono }) => (
