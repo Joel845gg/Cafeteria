@@ -1,0 +1,137 @@
+.sakura-petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+:root {
+    --wind-strength: 1;
+}
+
+.sakura-petal {
+    position: absolute;
+    top: -100px;
+    left: var(--left);
+    width: var(--size);
+    height: var(--size);
+    opacity: var(--opacity);
+    animation: 
+        petal-fall var(--duration) linear var(--delay) infinite,
+        petal-sway calc(var(--duration) * 2) ease-in-out var(--delay) infinite,
+        petal-rotate calc(var(--duration) / var(--rotate-speed)) linear var(--delay) infinite;
+    animation-composition: add;
+    filter: blur(calc(var(--size) * 0.03));
+    transform-origin: center;
+}
+
+.petal-core {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--color);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(45deg);
+}
+
+.petal-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(255, 255, 255, 0.7) 0%,
+        transparent 70%
+    );
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(45deg);
+    mix-blend-mode: overlay;
+}
+
+/* Diferentes tipos de pétalos */
+.petal-0 .petal-core {
+    box-shadow: 
+        0 0 calc(var(--size) * 0.8) color-mix(in srgb, var(--color) 40%, transparent),
+        inset 0 0 calc(var(--size) * 0.3) rgba(255, 255, 255, 0.4);
+}
+
+.petal-1 .petal-core {
+    box-shadow: 
+        0 0 calc(var(--size) * 0.6) color-mix(in srgb, var(--color) 30%, transparent),
+        inset 0 0 calc(var(--size) * 0.2) rgba(255, 255, 255, 0.3);
+}
+
+.petal-2 .petal-core {
+    box-shadow: 
+        0 0 calc(var(--size) * 0.4) color-mix(in srgb, var(--color) 20%, transparent),
+        inset 0 0 calc(var(--size) * 0.1) rgba(255, 255, 255, 0.2);
+}
+
+/* Animaciones */
+@keyframes petal-fall {
+    0% {
+        transform: 
+            translateY(-100px) 
+            translateX(0)
+            rotate(0deg);
+        opacity: 0;
+    }
+    3% {
+        opacity: var(--opacity);
+    }
+    97% {
+        opacity: var(--opacity);
+    }
+    100% {
+        transform: 
+            translateY(calc(100vh + 150px))
+            translateX(calc(200px * var(--sway) * var(--wind-strength, 1)))
+            rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes petal-sway {
+    0%, 100% {
+        transform: translateX(calc(-50px * var(--sway) * var(--wind-strength, 1)));
+    }
+    25% {
+        transform: translateX(calc(75px * var(--sway) * var(--wind-strength, 1)));
+    }
+    50% {
+        transform: translateX(calc(-25px * var(--sway) * var(--wind-strength, 1)));
+    }
+    75% {
+        transform: translateX(calc(40px * var(--sway) * var(--wind-strength, 1)));
+    }
+}
+
+@keyframes petal-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Efecto de viento intenso */
+.wind-burst {
+    animation: wind-burst 2s ease-out;
+}
+
+@keyframes wind-burst {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(200px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
