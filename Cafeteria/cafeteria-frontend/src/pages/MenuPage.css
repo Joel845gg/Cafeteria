@@ -14,7 +14,7 @@
     background: white;
     border-radius: 20px;
     margin-bottom: 2rem;
-    box-shadow: 0 5px 20px rgba(183, 110, 121, 0.1);
+    box-shadow: 0 5px 20px rgba(238, 71, 96, 0.1);
     border: 2px solid #ffe4e1;
 }
 
@@ -348,7 +348,7 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    background: linear-gradient(135deg, #ffb7c5, #dc143c);
+    background: linear-gradient(135deg, #ffb7c5, #fa6c88);
     color: white;
     border-radius: 30px;
     padding: 0.8rem 1.5rem;
@@ -385,7 +385,7 @@
 }
 
 .cart-count {
-    background: white;
+    background: rgb(240, 170, 223);
     color: #dc143c;
     width: 24px;
     height: 24px;
@@ -411,7 +411,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 2px solid #ffe4e1;
+    border: 2px solid #000000;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -456,7 +456,7 @@
 .item-price {
     font-size: 1.4rem;
     font-weight: 800;
-    color: #dc143c;
+    color: #c40b9b;
     background: #fff5f5;
     padding: 0.3rem 0.8rem;
     border-radius: 10px;
@@ -513,7 +513,7 @@
 }
 
 .category-nav::-webkit-scrollbar-thumb:hover {
-    background: #b76e79;
+    background: #eb7788;
 }
 
 /* Animaciones */
