@@ -3,7 +3,19 @@ import './CartModal.css';
 import { useCart } from '../context/CartContext';
 
 function CartModal({ onClose, onClearCart }) {
-    const { cart, removeFromCart, updateQuantity, getTotalPrice } = useCart();
+    const { 
+        cart, 
+        removeFromCart, 
+        updateQuantity, 
+        getTotalPrice,
+        formatPrice  // ← Esta función ya viene del contexto
+    } = useCart();
+
+    // Función local para calcular total por item
+    const calculateItemTotal = (price, quantity) => {
+        const priceNumber = typeof price === 'number' ? price : parseFloat(price);
+        return ((priceNumber || 0) * quantity).toFixed(2);
+    };
 
     return (
         <div className="cart-modal-overlay" onClick={onClose}>
@@ -29,7 +41,8 @@ function CartModal({ onClose, onClearCart }) {
                                     <div key={item.id} className="cart-item">
                                         <div className="item-info">
                                             <h4 className="item-name">{item.nombre}</h4>
-                                            <p className="item-price">${item.precio.toFixed(2)} c/u</p>
+                                            {/* Usa formatPrice del contexto */}
+                                            <p className="item-price">${formatPrice(item.precio)} c/u</p>
                                         </div>
                                         
                                         <div className="item-controls">
@@ -50,7 +63,7 @@ function CartModal({ onClose, onClearCart }) {
                                             </div>
                                             
                                             <div className="item-total">
-                                                ${(item.precio * item.quantity).toFixed(2)}
+                                                ${calculateItemTotal(item.precio, item.quantity)}
                                             </div>
                                             
                                             <button 
@@ -67,7 +80,8 @@ function CartModal({ onClose, onClearCart }) {
                             <div className="cart-summary">
                                 <div className="summary-row total">
                                     <span>Total a pagar:</span>
-                                    <span className="total-price">${getTotalPrice().toFixed(2)}</span>
+                                    {/* Usa formatPrice del contexto para el total */}
+                                    <span className="total-price">${formatPrice(getTotalPrice())}</span>
                                 </div>
                             </div>
 
@@ -84,7 +98,7 @@ function CartModal({ onClose, onClearCart }) {
                                         Seguir Comprando
                                     </button>
                                     <button className="checkout-btn">
-                                        💳 Pagar ${getTotalPrice().toFixed(2)}
+                                        💳 Pagar ${formatPrice(getTotalPrice())}
                                     </button>
                                 </div>
                             </div>

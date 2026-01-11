@@ -10,6 +10,14 @@ export const useCart = () => {
     return context;
 };
 
+// Función helper para convertir precio a número seguro
+const parsePrice = (price) => {
+    if (price === null || price === undefined) return 0;
+    if (typeof price === 'number') return price;
+    const parsed = parseFloat(price);
+    return isNaN(parsed) ? 0 : parsed;
+};
+
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -20,11 +28,21 @@ export const CartProvider = ({ children }) => {
             if (existingItem) {
                 return prevCart.map(cartItem =>
                     cartItem.id === item.id
-                        ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                        ? { 
+                            ...cartItem, 
+                            quantity: cartItem.quantity + 1,
+                            // Asegurar que precio sea número al actualizar
+                            precio: parsePrice(cartItem.precio)
+                        }
                         : cartItem
                 );
             }
-            return [...prevCart, { ...item, quantity: 1 }];
+            return [...prevCart, { 
+                ...item, 
+                quantity: 1,
+                // Asegurar que precio sea número al agregar
+                precio: parsePrice(item.precio)
+            }];
         });
     };
 
@@ -49,11 +67,19 @@ export const CartProvider = ({ children }) => {
     };
 
     const getTotalPrice = () => {
-        return cart.reduce((total, item) => total + (item.precio * item.quantity), 0);
+        return cart.reduce((total, item) => {
+            const itemPrice = parsePrice(item.precio);
+            return total + (itemPrice * item.quantity);
+        }, 0);
     };
 
     const getTotalItems = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    // Función para formatear precio (opcional, para usar en componentes)
+    const formatPrice = (price) => {
+        return parsePrice(price).toFixed(2);
     };
 
     return (
@@ -65,6 +91,7 @@ export const CartProvider = ({ children }) => {
             clearCart,
             getTotalPrice,
             getTotalItems,
+            formatPrice, // Exportar función de formateo
             isCartOpen,
             setIsCartOpen
         }}>
