@@ -72,9 +72,7 @@ function HomePage() {
                                 <span className="btn-arrow">→</span>
                             </button>
                             
-                            <button className="hero-btn secondary-btn">
-                                <span className="btn-text">Visítanos</span>
-                            </button>
+                            
                         </div>
                     </div>
                 </div>
@@ -228,15 +226,7 @@ function HomePage() {
                     <h2 className="section-title">Acciones Rápidas</h2>
                     <p className="section-subtitle">Todo lo que necesitas en un clic</p>
                     
-                    <div className="action-buttons-grid">
-                        <button className="action-card qr-action">
-                            <div className="action-content">
-                                <h3 className="action-title">Generar QR</h3>
-                                <p className="action-desc">Para pedidos rápidos y sin contacto</p>
-                            </div>
-                            <div className="action-arrow">→</div>
-                        </button>
-                        
+                    <div className="action-buttons-grid">                        
                         <button 
                             className="action-card menu-action"
                             onClick={() => navigate('/menu')}

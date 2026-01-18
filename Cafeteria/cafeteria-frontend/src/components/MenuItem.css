@@ -241,3 +241,25 @@
         font-size: 0.9rem;
     }
 }
+/* MenuItem.css - Actualizaciones para imágenes */
+.menu-item-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.item-image-container {
+    width: 100%;
+    height: 200px; /* Ajusta según necesites */
+    overflow: hidden;
+}
+
+.item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.item-image:hover {
+    transform: scale(1.05);
+}
