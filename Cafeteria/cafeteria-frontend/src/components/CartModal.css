@@ -476,3 +476,38 @@
         font-size: 0.8rem;
     }
 }
+
+/* Estilos para confirmación de pedido */
+.order-confirmation {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.confirmation-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+}
+
+.order-confirmation h3 {
+    color: #28a745;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.order-confirmation p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.confirmation-note {
+    font-style: italic;
+    color: #6c757d;
+    margin-top: 20px !important;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}

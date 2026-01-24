@@ -9,6 +9,8 @@ const db = require('./src/config/database');
 
 const app = express();
 
+const pedidoRoutes = require('./src/routes/pedidos.routes');
+
 // Middleware
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
@@ -18,7 +20,6 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 // Test database connection on startup
 db.testConnection().then(isConnected => {
     if (!isConnected) {
@@ -36,7 +37,7 @@ const authRoutes = require('./src/routes/auth.routes');
 app.use('/api/productos', productoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/pedidos', pedidoRoutes);
 // Ruta de prueba
 app.get('/', (req, res) => {
     res.json({ 
