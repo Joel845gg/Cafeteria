@@ -6,7 +6,7 @@ import MenuPage from './pages/MenuPage';
 import './App.css';
 
 
-
+import AdminPage from './pages/AdminPage';
 import CocinaDashboard from './pages/CocinaDashboard';
 import CajeroDashboard from './pages/CajeroDashboard';
 import LoginPage from './pages/LoginPage';
@@ -30,6 +30,8 @@ function App() {
             
             <Route path="/cocina" element={<CocinaDashboard />} />
 
+
+            <Route path="/admin" element={<AdminPage />} />
 
             {/* ... otras rutas ... */}
           </Routes>

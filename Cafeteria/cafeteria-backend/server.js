@@ -38,6 +38,7 @@ const authRoutes = require('./src/routes/auth.routes');
 
 const cajeroRoutes = require('./src/routes/cajero.routes');
 const cocinaRoutes = require('./src/routes/cocina.routes');
+const adminRoutes = require('./src/routes/admin.routes');
 
 
 
@@ -53,6 +54,7 @@ app.use('/api/pedidos', pedidoRoutes);
 
 app.use('/api/cajero', cajeroRoutes);
 app.use('/api/cocina', cocinaRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 
