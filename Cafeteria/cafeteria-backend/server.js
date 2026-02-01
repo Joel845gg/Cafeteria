@@ -33,7 +33,13 @@ const productoRoutes = require('./src/routes/productos.routes');
 const categoriaRoutes = require('./src/routes/categorias.routes');
 const authRoutes = require('./src/routes/auth.routes');
 
+
+
+
 const cajeroRoutes = require('./src/routes/cajero.routes');
+const cocinaRoutes = require('./src/routes/cocina.routes');
+
+
 
 
 // Usar rutas
@@ -42,7 +48,14 @@ app.use('/api/categorias', categoriaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 
+
+
+
 app.use('/api/cajero', cajeroRoutes);
+app.use('/api/cocina', cocinaRoutes);
+
+
+
 
 // Ruta de prueba
 app.get('/', (req, res) => {
