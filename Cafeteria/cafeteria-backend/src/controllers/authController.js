@@ -1,26 +1,11 @@
-const Usuario = require('../models/Usuario');
 const jwt = require('jsonwebtoken');
+const pool = require('../config/database');
 
-// Generar JWT Token
-const generateToken = (user) => {
-    return jwt.sign(
-        {
-            id: user.id,
-            nombre: user.nombre,
-            email: user.email,
-            rol: user.rol
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '24h' }
-    );
-};
-
-// Login de usuario
+// Login para todos los roles - SIN BCRYPT
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Validar que vengan datos
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -28,35 +13,61 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Buscar usuario por email
-        const user = await Usuario.findByEmail(email);
-        if (!user) {
+        // Buscar usuario
+        const result = await pool.query(
+            'SELECT id, nombre, email, password, rol, activo FROM usuarios WHERE email = $1',
+            [email]
+        );
+
+        if (result.rows.length === 0) {
             return res.status(401).json({
                 success: false,
-                message: 'Credenciales inválidas'
+                message: 'Credenciales incorrectas'
             });
         }
 
-        // Verificar contraseña
-        const isPasswordValid = await Usuario.comparePassword(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({
+        const user = result.rows[0];
+
+        // Verificar si está activo
+        if (!user.activo) {
+            return res.status(403).json({
                 success: false,
-                message: 'Credenciales inválidas'
+                message: 'Usuario desactivado'
             });
         }
 
-        // Generar token
-        const token = generateToken(user);
+        // VERIFICAR CONTRASEÑA SIMPLE (sin bcrypt)
+        const validPassword = (password === user.password);
 
-        // Omitir password en la respuesta
-        const { password: _, ...userWithoutPassword } = user;
+        if (!validPassword) {
+            return res.status(401).json({
+                success: false,
+                message: 'Credenciales incorrectas'
+            });
+        }
+
+        // Crear token JWT
+        const token = jwt.sign(
+            {
+                id: user.id,
+                nombre: user.nombre,
+                email: user.email,
+                rol: user.rol
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '8h' }
+        );
 
         res.json({
             success: true,
             message: 'Login exitoso',
             token,
-            user: userWithoutPassword
+            user: {
+                id: user.id,
+                nombre: user.nombre,
+                email: user.email,
+                rol: user.rol
+            }
         });
 
     } catch (error) {
@@ -68,52 +79,15 @@ exports.login = async (req, res) => {
     }
 };
 
-// Registrar nuevo usuario
-exports.register = async (req, res) => {
-    try {
-        const { nombre, email, password, rol } = req.body;
-
-        // Verificar si el usuario ya existe
-        const existingUser = await Usuario.findByEmail(email);
-        if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'El usuario ya existe'
-            });
-        }
-
-        // Crear nuevo usuario
-        const newUser = await Usuario.create({
-            nombre,
-            email,
-            password,
-            rol: rol || 'cliente'
-        });
-
-        // Generar token para el nuevo usuario
-        const token = generateToken(newUser);
-
-        res.status(201).json({
-            success: true,
-            message: 'Usuario registrado exitosamente',
-            token,
-            user: newUser
-        });
-
-    } catch (error) {
-        console.error('Error en register:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error en el servidor'
-        });
-    }
-};
-
 // Obtener perfil del usuario actual
 exports.getProfile = async (req, res) => {
     try {
-        const user = await Usuario.findById(req.user.id);
-        if (!user) {
+        const result = await pool.query(
+            'SELECT id, nombre, email, rol, activo, created_at FROM usuarios WHERE id = $1',
+            [req.user.id]
+        );
+
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Usuario no encontrado'
@@ -122,22 +96,14 @@ exports.getProfile = async (req, res) => {
 
         res.json({
             success: true,
-            data: user
+            user: result.rows[0]
         });
 
     } catch (error) {
-        console.error('Error en getProfile:', error);
+        console.error('Error obteniendo perfil:', error);
         res.status(500).json({
             success: false,
             message: 'Error en el servidor'
         });
     }
-};
-
-// Verificar token (para frontend)
-exports.verifyToken = (req, res) => {
-    res.json({
-        success: true,
-        user: req.user
-    });
 };

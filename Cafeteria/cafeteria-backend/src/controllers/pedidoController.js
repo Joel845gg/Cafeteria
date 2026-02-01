@@ -60,7 +60,7 @@ exports.createOrder = async (req, res) => {
         const pedidoResult = await client.query(pedidoQuery, [
             usuarioId,
             numeroPedido,
-            'pendiente',
+            'pendiente_pago',
             total,
             notas
         ]);
@@ -96,7 +96,7 @@ exports.createOrder = async (req, res) => {
             pedidoId,
             metodo_pago,
             total,
-            'pendiente',
+            'pendiente_pago',
             referencia
         ]);
 
@@ -119,7 +119,7 @@ exports.createOrder = async (req, res) => {
                 id: pedidoId,
                 numero_pedido: numeroPedido,
                 total: total,
-                estado: 'pendiente',
+                estado: 'pendiente_pago',
                 fecha: new Date().toISOString(),
                 cliente: nombre,
                 telefono: telefono

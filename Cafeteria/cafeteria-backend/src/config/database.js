@@ -9,21 +9,19 @@ const pool = new Pool({
     port: process.env.PG_PORT || 5432,
 });
 
-// Manejo de eventos de la conexión
 pool.on('connect', () => {
-    console.log('✅ Conectado a PostgreSQL - Sakura Coffee Database');
+    console.log('✅ Conectado a PostgreSQL');
 });
 
 pool.on('error', (err) => {
-    console.error('❌ Error inesperado en PostgreSQL:', err);
-    process.exit(-1);
+    console.error('❌ Error en PostgreSQL:', err);
 });
 
 // Función para probar la conexión
 const testConnection = async () => {
     try {
         const result = await pool.query('SELECT NOW()');
-        console.log('✅ PostgreSQL conectado correctamente:', result.rows[0].now);
+        console.log('✅ PostgreSQL conectado:', result.rows[0].now);
         return true;
     } catch (error) {
         console.error('❌ Error conectando a PostgreSQL:', error.message);
@@ -31,8 +29,9 @@ const testConnection = async () => {
     }
 };
 
+// Exportar como objeto
 module.exports = {
     query: (text, params) => pool.query(text, params),
-    pool,
+    pool,  // ← Exportar pool como propiedad
     testConnection
 };

@@ -5,19 +5,31 @@ import HomePage from './pages/HomePage';
 import MenuPage from './pages/MenuPage';
 import './App.css';
 
+import CajeroDashboard from './pages/CajeroDashboard';
+import LoginPage from './pages/LoginPage';
+
+
+
 function App() {
-    return (
-        <CartProvider>
-            <Router>
-                <div className="App">
-                    <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/menu" element={<MenuPage />} />
-                    </Routes>
-                </div>
-            </Router>
-        </CartProvider>
-    );
+  return (
+    <Router>
+      <CartProvider>
+        <div className="App">
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            
+            {/* Ruta protegida - Cajero */}
+            <Route path="/cajero" element={<CajeroDashboard />} />
+            
+            {/* ... otras rutas ... */}
+          </Routes>
+        </div>
+      </CartProvider>
+    </Router>
+  );
 }
 
 export default App;

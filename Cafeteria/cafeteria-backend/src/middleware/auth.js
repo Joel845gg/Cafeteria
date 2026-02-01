@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
     try {
-        // Obtener token del header
         const authHeader = req.header('Authorization');
         
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,7 +20,6 @@ const auth = (req, res, next) => {
             });
         }
 
-        // Verificar token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
@@ -59,6 +57,26 @@ const isAdmin = (req, res, next) => {
     next();
 };
 
+const isCajero = (req, res, next) => {
+    if (req.user.rol !== 'cajero') {
+        return res.status(403).json({ 
+            success: false, 
+            message: 'Acceso denegado. Se requiere rol de cajero.' 
+        });
+    }
+    next();
+};
+
+const isCocina = (req, res, next) => {
+    if (req.user.rol !== 'cocina') {
+        return res.status(403).json({ 
+            success: false, 
+            message: 'Acceso denegado. Se requiere rol de cocina.' 
+        });
+    }
+    next();
+};
+
 const isCajeroOrAdmin = (req, res, next) => {
     if (!['admin', 'cajero'].includes(req.user.rol)) {
         return res.status(403).json({ 
@@ -69,4 +87,10 @@ const isCajeroOrAdmin = (req, res, next) => {
     next();
 };
 
-module.exports = { auth, isAdmin, isCajeroOrAdmin };
+module.exports = { 
+    auth, 
+    isAdmin, 
+    isCajero, 
+    isCocina, 
+    isCajeroOrAdmin 
+};

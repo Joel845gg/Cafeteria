@@ -33,11 +33,17 @@ const productoRoutes = require('./src/routes/productos.routes');
 const categoriaRoutes = require('./src/routes/categorias.routes');
 const authRoutes = require('./src/routes/auth.routes');
 
+const cajeroRoutes = require('./src/routes/cajero.routes');
+
+
 // Usar rutas
 app.use('/api/productos', productoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/pedidos', pedidoRoutes);
+
+app.use('/api/cajero', cajeroRoutes);
+
 // Ruta de prueba
 app.get('/', (req, res) => {
     res.json({ 
