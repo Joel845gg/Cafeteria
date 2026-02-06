@@ -1,4 +1,5 @@
 const { pool } = require('../config/database');
+const bcrypt = require('bcryptjs');
 
 // ===== ESTADÍSTICAS Y REPORTES =====
 
@@ -7,7 +8,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
     try {
         const hoy = new Date().toISOString().split('T')[0];
         const ayer = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-        
+
         const [
             hoyResult,
             ayerResult,
@@ -25,7 +26,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
                 WHERE DATE(created_at) = $1 
                 AND estado != 'cancelado'
             `, [hoy]),
-            
+
             // Ventas de ayer (para comparación)
             pool.query(`
                 SELECT 
@@ -35,7 +36,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
                 WHERE DATE(created_at) = $1 
                 AND estado != 'cancelado'
             `, [ayer]),
-            
+
             // Distribución por estado
             pool.query(`
                 SELECT 
@@ -47,7 +48,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
                 GROUP BY estado
                 ORDER BY cantidad DESC
             `, [hoy]),
-            
+
             // Top 10 productos más vendidos (con COALESCE para evitar null)
             pool.query(`
                 SELECT 
@@ -63,7 +64,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
                 ORDER BY total_vendido DESC
                 LIMIT 10
             `, [hoy]),
-            
+
             // Ventas últimos 30 días
             pool.query(`
                 SELECT 
@@ -83,10 +84,10 @@ exports.getEstadisticasGenerales = async (req, res) => {
         const pedidosHoy = parseInt(hoyResult.rows[0]?.pedidos_hoy) || 0;
         const ventasHoy = parseFloat(hoyResult.rows[0]?.ventas_hoy) || 0;
         const promedioHoy = parseFloat(hoyResult.rows[0]?.promedio_hoy) || 0;
-        
+
         const pedidosAyer = parseInt(ayerResult.rows[0]?.pedidos_ayer) || 0;
         const ventasAyer = parseFloat(ayerResult.rows[0]?.ventas_ayer) || 0;
-        
+
         // Calcular cambio porcentual (evitar división por cero)
         let cambioPedidos = '0.0';
         if (pedidosAyer > 0) {
@@ -94,7 +95,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
         } else if (pedidosHoy > 0) {
             cambioPedidos = '100.0';
         }
-        
+
         let cambioVentas = '0.0';
         if (ventasAyer > 0) {
             cambioVentas = ((ventasHoy - ventasAyer) / ventasAyer * 100).toFixed(1);
@@ -113,14 +114,14 @@ exports.getEstadisticasGenerales = async (req, res) => {
                     cambio_pedidos: cambioPedidos,
                     cambio_ventas: cambioVentas
                 },
-                
+
                 // Distribución por estado (asegurar que sea array)
                 por_estado: estadoResult.rows.map(row => ({
                     estado: row.estado || 'sin_estado',
                     cantidad: parseInt(row.cantidad) || 0,
                     total_estado: parseFloat(row.total_estado) || 0
                 })),
-                
+
                 // Top productos (asegurar valores numéricos)
                 top_productos: topProductosResult.rows.map(row => ({
                     nombre: row.nombre || 'Producto sin nombre',
@@ -128,7 +129,7 @@ exports.getEstadisticasGenerales = async (req, res) => {
                     total_vendido: parseInt(row.total_vendido) || 0,
                     ingresos: parseFloat(row.ingresos) || 0
                 })),
-                
+
                 // Ventas históricas
                 ventas_mensuales: ventasMensualesResult.rows.map(row => ({
                     fecha: row.fecha,
@@ -152,14 +153,14 @@ exports.getEstadisticasGenerales = async (req, res) => {
 // Obtener todos los pedidos (con filtros)
 exports.getPedidosAdmin = async (req, res) => {
     try {
-        const { 
-            estado, 
-            fecha_desde, 
-            fecha_hasta, 
-            pagina = 1, 
-            por_pagina = 20 
+        const {
+            estado,
+            fecha_desde,
+            fecha_hasta,
+            pagina = 1,
+            por_pagina = 20
         } = req.query;
-        
+
         let whereConditions = ['1=1'];
         let queryParams = [];
         let paramCount = 0;
@@ -220,8 +221,8 @@ exports.getPedidosAdmin = async (req, res) => {
         const result = await pool.query(pedidosQuery, queryParams);
 
         // Obtener total para paginación
-        const totalPedidos = result.rows.length > 0 
-            ? parseInt(result.rows[0].total_pedidos) 
+        const totalPedidos = result.rows.length > 0
+            ? parseInt(result.rows[0].total_pedidos)
             : 0;
 
         res.json({
@@ -321,7 +322,7 @@ exports.actualizarEstadoPedido = async (req, res) => {
 exports.getInventario = async (req, res) => {
     try {
         const { categoria_id, bajo_stock = 'false' } = req.query;
-        
+
         let whereConditions = ['p.activo = true'];
         let queryParams = [];
         let paramCount = 0;
@@ -502,7 +503,7 @@ exports.actualizarStock = async (req, res) => {
 exports.getUsuarios = async (req, res) => {
     try {
         const { rol, activo } = req.query;
-        
+
         let whereConditions = ['1=1'];
         let queryParams = [];
         let paramCount = 0;
@@ -593,12 +594,16 @@ exports.crearUsuario = async (req, res) => {
             });
         }
 
-        // Crear usuario (password simple para desarrollo)
+        // Hashear contraseña
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Crear usuario
         const result = await pool.query(`
             INSERT INTO usuarios (nombre, email, password, rol, activo, created_at) 
             VALUES ($1, $2, $3, $4, true, NOW())
             RETURNING id, nombre, email, rol, activo, created_at
-        `, [nombre, email, password, rol]);
+        `, [nombre, email, hashedPassword, rol]);
 
         res.status(201).json({
             success: true,
@@ -763,7 +768,7 @@ exports.generarReporteVentas = async (req, res) => {
             total_periodos: result.rows.length,
             total_pedidos: result.rows.reduce((sum, row) => sum + parseInt(row.total_pedidos), 0),
             total_ventas: result.rows.reduce((sum, row) => sum + parseFloat(row.total_ventas), 0),
-            promedio_general: result.rows.length > 0 
+            promedio_general: result.rows.length > 0
                 ? result.rows.reduce((sum, row) => sum + parseFloat(row.promedio_venta), 0) / result.rows.length
                 : 0
         };

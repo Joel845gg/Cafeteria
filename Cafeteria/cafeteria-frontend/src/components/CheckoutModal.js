@@ -9,7 +9,7 @@ function CheckoutModal({ onClose, onOrderSuccess }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [orderData, setOrderData] = useState(null);
-    
+
     // Estado del formulario
     const [formData, setFormData] = useState({
         nombre: '',
@@ -66,21 +66,21 @@ function CheckoutModal({ onClose, onOrderSuccess }) {
 
             const response = await createOrder(orderDataToSend);
             console.log('Respuesta del servidor:', response);
-            
+
             if (response.success) {
                 setOrderData(response.order);
                 setSuccess(true);
-                
+
                 // Notificar éxito al padre (CartModal)
                 if (onOrderSuccess) {
                     onOrderSuccess(response.order);
                 }
-                
+
                 // Cerrar modal después de 5 segundos
                 setTimeout(() => {
                     onClose();
                 }, 5000);
-                
+
             } else {
                 setError(response.message || 'Error al procesar el pedido');
             }
@@ -105,7 +105,7 @@ function CheckoutModal({ onClose, onOrderSuccess }) {
                     <div className="order-confirmation">
                         <div className="confirmation-icon">✅</div>
                         <h3>¡Gracias por tu compra!</h3>
-                        
+
                         <div className="confirmation-details">
                             <div className="detail-item">
                                 <span className="detail-label">N° de pedido:</span>
@@ -171,9 +171,9 @@ function CheckoutModal({ onClose, onOrderSuccess }) {
 
                     <form className="checkout-form" onSubmit={handleSubmit}>
                         <h3>Datos del Cliente</h3>
-                        
+
                         {error && <div className="error-message">{error}</div>}
-                        
+
                         <div className="form-group">
                             <label htmlFor="nombre">Nombre del Cliente *</label>
                             <input
@@ -203,31 +203,24 @@ function CheckoutModal({ onClose, onOrderSuccess }) {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="metodoPago">Método de Pago</label>
-                            <select
-                                id="metodoPago"
-                                name="metodoPago"
-                                value={formData.metodoPago}
-                                onChange={handleInputChange}
-                                disabled={isProcessing}
-                            >
-                                <option value="efectivo">Efectivo</option>
-                                <option value="tarjeta">Tarjeta</option>
-                                <option value="transferencia">Transferencia</option>
-                            </select>
+                            <label>Método de Pago</label>
+                            <div className="payment-method-readonly">
+                                💵 Efectivo / Contra Entrega
+                            </div>
+                            <input type="hidden" name="metodoPago" value="efectivo" />
                         </div>
 
                         <div className="checkout-actions">
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 className="back-btn"
                                 onClick={onClose}
                                 disabled={isProcessing}
                             >
                                 ← Volver
                             </button>
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 className="submit-order-btn"
                                 disabled={isProcessing || cart.length === 0}
                             >

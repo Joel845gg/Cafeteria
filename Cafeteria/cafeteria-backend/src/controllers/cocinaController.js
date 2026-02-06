@@ -57,7 +57,7 @@ exports.cambiarEstadoPedido = async (req, res) => {
 
         // Validar estado permitido para cocina
         const estadosPermitidos = ['preparando', 'listo'];
-        
+
         if (!estadosPermitidos.includes(estado)) {
             return res.status(400).json({
                 success: false,
@@ -86,7 +86,7 @@ exports.cambiarEstadoPedido = async (req, res) => {
             'preparando': ['listo']
         };
 
-        if (!transicionesValidas[pedido.estado] || 
+        if (!transicionesValidas[pedido.estado] ||
             !transicionesValidas[pedido.estado].includes(estado)) {
             return res.status(400).json({
                 success: false,
@@ -99,6 +99,9 @@ exports.cambiarEstadoPedido = async (req, res) => {
             'UPDATE pedidos SET estado = $1 WHERE id = $2',
             [estado, id]
         );
+
+        const io = req.app.get('io');
+        io.emit('pedido_actualizado', { id, estado });
 
         // Registrar cambio (opcional)
         await pool.query(
@@ -124,7 +127,7 @@ exports.cambiarEstadoPedido = async (req, res) => {
 exports.getEstadisticasCocina = async (req, res) => {
     try {
         const hoy = new Date().toISOString().split('T')[0];
-        
+
         const [pendientesResult, preparandoResult, completadosResult] = await Promise.all([
             pool.query(`
                 SELECT COUNT(*) as cantidad 
@@ -132,14 +135,14 @@ exports.getEstadisticasCocina = async (req, res) => {
                 WHERE DATE(created_at) = $1 
                 AND estado = 'pendiente_preparacion'
             `, [hoy]),
-            
+
             pool.query(`
                 SELECT COUNT(*) as cantidad 
                 FROM pedidos 
                 WHERE DATE(created_at) = $1 
                 AND estado = 'preparando'
             `, [hoy]),
-            
+
             pool.query(`
                 SELECT COUNT(*) as cantidad 
                 FROM pedidos 

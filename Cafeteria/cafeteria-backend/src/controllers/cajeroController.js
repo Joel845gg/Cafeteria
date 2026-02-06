@@ -5,7 +5,7 @@ const { pool } = require('../config/database');
 exports.getPedidosCajero = async (req, res) => {
     try {
         const hoy = new Date().toISOString().split('T')[0];
-        
+
         const result = await pool.query(`
             SELECT 
                 p.id,
@@ -90,6 +90,11 @@ exports.marcarComoPagado = async (req, res) => {
             ['pendiente_preparacion', id]
         );
 
+        // Notificar a Cocina
+        const io = req.app.get('io');
+        io.emit('pedido_actualizado', { id, estado: 'pendiente_preparacion' });
+        io.emit('nuevo_pedido_cocina', { id }); // Evento específico para alertar cocina
+
         res.json({
             success: true,
             message: 'Pedido marcado como pagado y enviado a cocina'
@@ -138,6 +143,9 @@ exports.marcarComoEntregado = async (req, res) => {
             ['entregado', id]
         );
 
+        const io = req.app.get('io');
+        io.emit('pedido_actualizado', { id, estado: 'entregado' });
+
         res.json({
             success: true,
             message: 'Pedido marcado como entregado'
@@ -156,7 +164,7 @@ exports.marcarComoEntregado = async (req, res) => {
 exports.getEstadisticasCajero = async (req, res) => {
     try {
         const hoy = new Date().toISOString().split('T')[0];
-        
+
         // Ejecutar todas las consultas en paralelo
         const [totalResult, pendientesResult, listosResult] = await Promise.all([
             // Total pedidos y ventas del día (excluyendo pendientes_pago)
@@ -168,7 +176,7 @@ exports.getEstadisticasCajero = async (req, res) => {
                 WHERE DATE(created_at) = $1 
                 AND estado IN ('pendiente_preparacion', 'preparando', 'listo', 'entregado')
             `, [hoy]),
-            
+
             // Pedidos pendientes de pago
             pool.query(`
                 SELECT COUNT(*) as cantidad 
@@ -176,7 +184,7 @@ exports.getEstadisticasCajero = async (req, res) => {
                 WHERE DATE(created_at) = $1 
                 AND estado = 'pendiente_pago'
             `, [hoy]),
-            
+
             // Pedidos listos para entrega
             pool.query(`
                 SELECT COUNT(*) as cantidad 

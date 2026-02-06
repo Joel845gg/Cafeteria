@@ -1,6 +1,6 @@
 import React from 'react';
 import './HomePage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import logo from '../images/sakuracoffee.jpg';
 
 // URLs de imágenes para las cartas (reemplaza con tus propias imágenes si es necesario)
@@ -22,9 +22,9 @@ function HomePage() {
                     const size = 10 + Math.random() * 20;
                     const opacity = 0.15 + Math.random() * 0.35;
                     const rotate = Math.random() * 360;
-                    
+
                     return (
-                        <div 
+                        <div
                             key={i}
                             className="sakura-petal"
                             style={{
@@ -47,9 +47,9 @@ function HomePage() {
             <header className="hero-section">
                 <div className="hero-overlay">
                     <div className="hero-content">
-                        <img 
-                            src={logo} 
-                            alt="Sakura Coffee Logo" 
+                        <img
+                            src={logo}
+                            alt="Sakura Coffee Logo"
                             className="main-logo"
                         />
                         <h1 className="hero-title">
@@ -57,22 +57,23 @@ function HomePage() {
                             <span className="title-main">Sakura Coffee</span>
                         </h1>
                         <p className="hero-subtitle">LATACUNGA • ECUADOR</p>
-                        
+
                         <p className="hero-tagline">
                             Donde cada taza es una experiencia,<br />
                             cada sorbo una tradición
                         </p>
-                        
+
                         <div className="hero-buttons">
-                            <button 
+                            <Link
+                                to="/menu"
                                 className="hero-btn primary-btn"
-                                onClick={() => navigate('/menu')}
+                                style={{ textDecoration: 'none' }}
                             >
                                 <span className="btn-text">Explorar Menú</span>
                                 <span className="btn-arrow">→</span>
-                            </button>
-                            
-                            
+                            </Link>
+
+
                         </div>
                     </div>
                 </div>
@@ -83,14 +84,14 @@ function HomePage() {
                 <div className="container">
                     <h2 className="section-title">Nuestra Esencia</h2>
                     <p className="section-subtitle">Lo que hace especial a Sakura Coffee</p>
-                    
+
                     <div className="highlight-cards">
                         {/* Card 1: Café Premium con imagen */}
                         <div className="highlight-card">
                             <div className="card-image-container">
-                                <img 
-                                    src={granosCafe} 
-                                    alt="Granos de café premium" 
+                                <img
+                                    src={granosCafe}
+                                    alt="Granos de café premium"
                                     className="card-image"
                                 />
                                 <div className="card-overlay"></div>
@@ -107,13 +108,13 @@ function HomePage() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Card 2: Desayunos con imagen */}
                         <div className="highlight-card">
                             <div className="card-image-container">
-                                <img 
-                                    src={desayunoHero} 
-                                    alt="Desayunos frescos" 
+                                <img
+                                    src={desayunoHero}
+                                    alt="Desayunos frescos"
                                     className="card-image"
                                 />
                                 <div className="card-overlay"></div>
@@ -130,13 +131,13 @@ function HomePage() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Card 3: Ambiente con imagen */}
                         <div className="highlight-card">
                             <div className="card-image-container">
-                                <img 
-                                    src={ambienteCafe} 
-                                    alt="Ambiente acogedor" 
+                                <img
+                                    src={ambienteCafe}
+                                    alt="Ambiente acogedor"
                                     className="card-image"
                                 />
                                 <div className="card-overlay"></div>
@@ -168,8 +169,8 @@ function HomePage() {
                             </div>
                             <div className="mv-content">
                                 <p className="mv-text">
-                                    Cultivar en nuestra comunidad el amor por el café de especialidad, 
-                                    mientras promovemos prácticas sustentables y responsables con el medio ambiente 
+                                    Cultivar en nuestra comunidad el amor por el café de especialidad,
+                                    mientras promovemos prácticas sustentables y responsables con el medio ambiente
                                     y nuestra sociedad.
                                 </p>
                                 <div className="mv-features">
@@ -188,7 +189,7 @@ function HomePage() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Visión */}
                         <div className="mv-card vision-card">
                             <div className="mv-header">
@@ -196,8 +197,8 @@ function HomePage() {
                             </div>
                             <div className="mv-content">
                                 <p className="mv-text">
-                                    Ser el referente en café de especialidad en Latacunga, fomentando una 
-                                    inspiración duradera y un aprecio genuino por productos de calidad, 
+                                    Ser el referente en café de especialidad en Latacunga, fomentando una
+                                    inspiración duradera y un aprecio genuino por productos de calidad,
                                     promoviendo un entorno ameno y receptivo para todos.
                                 </p>
                                 <div className="mv-features">
@@ -225,9 +226,9 @@ function HomePage() {
                 <div className="container">
                     <h2 className="section-title">Acciones Rápidas</h2>
                     <p className="section-subtitle">Todo lo que necesitas en un clic</p>
-                    
-                    <div className="action-buttons-grid">                        
-                        <button 
+
+                    <div className="action-buttons-grid">
+                        <button
                             className="action-card menu-action"
                             onClick={() => navigate('/menu')}
                         >
@@ -237,7 +238,7 @@ function HomePage() {
                             </div>
                             <div className="action-arrow">→</div>
                         </button>
-                        
+
                         <button className="action-card hours-action">
                             <div className="action-content">
                                 <h3 className="action-title">Horarios</h3>
@@ -255,16 +256,16 @@ function HomePage() {
                 <div className="container">
                     <div className="footer-content">
                         <div className="footer-brand">
-                            <img 
-                                src={logo} 
-                                alt="Sakura Coffee" 
+                            <img
+                                src={logo}
+                                alt="Sakura Coffee"
                                 className="footer-logo"
                             />
                             <p className="footer-tagline">
                                 Donde la tradición japonesa se encuentra con el café ecuatoriano
                             </p>
                         </div>
-                        
+
                         <div className="footer-info">
                             <div className="info-column">
                                 <h4 className="info-title">Contacto</h4>
@@ -272,13 +273,13 @@ function HomePage() {
                                 <p className="info-item">📞 +593 98 765 4321</p>
                                 <p className="info-item">✉️ hola@sakuracoffee.com</p>
                             </div>
-                            
+
                             <div className="info-column">
                                 <h4 className="info-title">Horarios</h4>
                                 <p className="info-item">Lunes a Viernes: 7:00 - 21:00</p>
                                 <p className="info-item">Sábado y Domingo: 8:00 - 22:00</p>
                             </div>
-                            
+
                             <div className="info-column">
                                 <h4 className="info-title">Redes Sociales</h4>
                                 <div className="social-icons">
@@ -290,7 +291,7 @@ function HomePage() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="footer-bottom">
                         <p className="copyright">
                             © {new Date().getFullYear()} Sakura Coffee. Todos los derechos reservados.

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -9,32 +10,24 @@ function LoginPage() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    const { login } = useAuth(); // Usar hook de auth
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+            const result = await login(email, password);
 
-            const data = await response.json();
-
-            if (data.success) {
-                // Guardar token y datos de usuario
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                
-                // Redirigir según rol
-                switch (data.user.rol) {
+            if (result.success) {
+                // Redirección basada en rol
+                switch (result.user.rol) {
                     case 'admin':
                         navigate('/admin');
                         break;
                     case 'cajero':
-                        navigate('/cajero'); // ← Cajero va a su dashboard
+                        navigate('/cajero');
                         break;
                     case 'cocina':
                         navigate('/cocina');
@@ -43,10 +36,10 @@ function LoginPage() {
                         navigate('/');
                 }
             } else {
-                setError(data.message || 'Credenciales incorrectas');
+                setError(result.message);
             }
         } catch (err) {
-            setError('Error de conexión con el servidor');
+            setError('Error inesperado. Intente nuevamente.');
         } finally {
             setLoading(false);
         }
@@ -57,9 +50,9 @@ function LoginPage() {
             <div className="login-card">
                 <h2>Iniciar Sesión - Sistema Cajero</h2>
                 <p className="login-subtitle">Sakura Coffee Management</p>
-                
+
                 {error && <div className="error-message">{error}</div>}
-                
+
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Email</label>
@@ -72,7 +65,7 @@ function LoginPage() {
                             disabled={loading}
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label>Contraseña</label>
                         <input
@@ -84,7 +77,7 @@ function LoginPage() {
                             disabled={loading}
                         />
                     </div>
-                    
+
                     <button type="submit" disabled={loading} className="login-btn">
                         {loading ? (
                             <>
@@ -95,7 +88,7 @@ function LoginPage() {
                         )}
                     </button>
                 </form>
-                
+
                 <div className="login-info">
                     <p><strong>Usuario de prueba (Cajero):</strong></p>
                     <p>Email: cajero@cafeteria.com</p>

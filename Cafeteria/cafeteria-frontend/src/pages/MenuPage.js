@@ -10,9 +10,9 @@ import logo from '../images/sakuracoffee.jpg';
 // Datos de categorías completos
 const categories = [
     { id: 1, nombre: 'Bebidas Calientes', icon: '🔥' },
-    { 
-        id: 2, 
-        nombre: 'Bebidas Frías', 
+    {
+        id: 2,
+        nombre: 'Bebidas Frías',
         icon: '🧊',
         subcategorias: [
             { id: 'sin-cafe', nombre: 'Sin Café' },
@@ -36,7 +36,7 @@ function MenuPage() {
     const [activeCategory, setActiveCategory] = useState(1);
     const [menuItems, setMenuItems] = useState([]);
     const [loading, setLoading] = useState(false);
-    
+
     const {
         addToCart,
         clearCart,
@@ -64,7 +64,7 @@ function MenuPage() {
                 setLoading(false);
             }
         };
-        
+
         if (activeCategory) {
             loadProducts();
         }
@@ -87,9 +87,9 @@ function MenuPage() {
 
     // Filtrar items por categoría
     const filteredItems = menuItems.filter(item => item.categoria_id === activeCategory);
-    
+
     // Agrupar por tipo si es la categoría de Bebidas Frías (id: 2)
-    const itemsPorTipo = activeCategory === 2 
+    const itemsPorTipo = activeCategory === 2
         ? {
             'sin-cafe': filteredItems.filter(item => item.tipo === 'sin-cafe'),
             'con-cafe': filteredItems.filter(item => item.tipo === 'con-cafe')
@@ -119,17 +119,17 @@ function MenuPage() {
                 <button className="back-btn" onClick={() => navigate('/')}>
                     ← Inicio
                 </button>
-                
+
                 <div className="header-content">
-                    <img 
-                        src={logo} 
-                        alt="Sakura Coffee" 
+                    <img
+                        src={logo}
+                        alt="Sakura Coffee"
                         className="menu-logo"
                     />
                     <p className="menu-subtitle">Selecciona una categoría para explorar</p>
                 </div>
-                
-                <div 
+
+                <div
                     className="cart-indicator"
                     onClick={() => setIsCartOpen(true)}
                 >
@@ -143,9 +143,8 @@ function MenuPage() {
                     {categories.map(category => (
                         <button
                             key={category.id}
-                            className={`category-tab ${activeCategory === category.id ? 'active' : ''} ${
-                                category.subcategorias ? 'has-subcategories' : ''
-                            }`}
+                            className={`category-tab ${activeCategory === category.id ? 'active' : ''} ${category.subcategorias ? 'has-subcategories' : ''
+                                }`}
                             onClick={() => setActiveCategory(category.id)}
                         >
                             <span className="tab-icon">
@@ -166,7 +165,7 @@ function MenuPage() {
                         </span>
                         {activeCategoryName}
                     </h2>
-                    
+
                     <div className="category-count">
                         {filteredItems.length} {filteredItems.length === 1 ? 'producto' : 'productos'}
                     </div>
@@ -184,14 +183,14 @@ function MenuPage() {
                             {/* Bebidas frías SIN café */}
                             {itemsPorTipo['sin-cafe'].length > 0 && (
                                 <>
-                                    <SubcategorySeparator 
-                                        titulo="Bebidas Frías Sin Café" 
+                                    <SubcategorySeparator
+                                        titulo="Bebidas Frías Sin Café"
                                         icono="🧃"
                                     />
                                     <div className="menu-grid">
                                         {itemsPorTipo['sin-cafe'].map(item => (
                                             <div key={item.id} className="menu-item-wrapper">
-                                                <MenuItem 
+                                                <MenuItem
                                                     item={item}
                                                     onAddToCart={() => addToCart(item)}
                                                 />
@@ -200,18 +199,18 @@ function MenuPage() {
                                     </div>
                                 </>
                             )}
-                            
+
                             {/* Bebidas frías CON café */}
                             {itemsPorTipo['con-cafe'].length > 0 && (
                                 <>
-                                    <SubcategorySeparator 
-                                        titulo="Bebidas Frías Con Café" 
+                                    <SubcategorySeparator
+                                        titulo="Bebidas Frías Con Café"
                                         icono="☕"
                                     />
                                     <div className="menu-grid">
                                         {itemsPorTipo['con-cafe'].map(item => (
                                             <div key={item.id} className="menu-item-wrapper">
-                                                <MenuItem 
+                                                <MenuItem
                                                     item={item}
                                                     onAddToCart={() => addToCart(item)}
                                                 />
@@ -226,7 +225,7 @@ function MenuPage() {
                         <div className="menu-grid">
                             {filteredItems.map(item => (
                                 <div key={item.id} className="menu-item-wrapper">
-                                    <MenuItem 
+                                    <MenuItem
                                         item={item}
                                         onAddToCart={() => addToCart(item)}
                                     />
@@ -247,7 +246,7 @@ function MenuPage() {
 
             {/* Modal del carrito */}
             {isCartOpen && (
-                <CartModal 
+                <CartModal
                     onClose={() => setIsCartOpen(false)}
                     onClearCart={clearCart}
                 />
@@ -255,7 +254,7 @@ function MenuPage() {
 
             {/* Botón flotante del carrito */}
             {getTotalItems() > 0 && (
-                <div 
+                <div
                     className="floating-cart-btn"
                     onClick={() => setIsCartOpen(true)}
                 >

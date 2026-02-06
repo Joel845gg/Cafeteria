@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const pool = require('../config/database');
 
 // Login para todos los roles - SIN BCRYPT
@@ -36,8 +37,8 @@ exports.login = async (req, res) => {
             });
         }
 
-        // VERIFICAR CONTRASEÑA SIMPLE (sin bcrypt)
-        const validPassword = (password === user.password);
+        // Comparar contraseña con bcrypt
+        const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
             return res.status(401).json({
