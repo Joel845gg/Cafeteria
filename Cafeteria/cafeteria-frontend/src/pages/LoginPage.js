@@ -5,7 +5,7 @@ import './LoginPage.css';
 
 function LoginPage() {
     const [email, setEmail] = useState('cajero@cafeteria.com');
-    const [password, setPassword] = useState('123456');
+    const [password, setPassword] = useState('cajero123');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -92,7 +92,7 @@ function LoginPage() {
                 <div className="login-info">
                     <p><strong>Usuario de prueba (Cajero):</strong></p>
                     <p>Email: cajero@cafeteria.com</p>
-                    <p>Contraseña: 123456</p>
+                    <p>Contraseña: cajero123</p>
                 </div>
             </div>
         </div>
