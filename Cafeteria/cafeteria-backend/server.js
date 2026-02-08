@@ -43,13 +43,48 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Test database connection on startup
-db.testConnection().then(isConnected => {
+
+// Test database connection and initialize database on startup
+const fs = require('fs');
+const path = require('path');
+
+db.testConnection().then(async (isConnected) => {
     if (!isConnected) {
-        console.error(' No se pudo conectar a la base de datos. Saliendo...');
+        console.error('❌ No se pudo conectar a la base de datos. Saliendo...');
         process.exit(1);
     }
+
+    // Inicializar base de datos en producción
+    if (process.env.NODE_ENV === 'production') {
+        try {
+            console.log('🔄 Verificando e inicializando base de datos...');
+
+            // Verificar si ya existen las tablas
+            const checkTables = await db.query(`
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_name = 'productos'
+                );
+            `);
+
+            const tablesExist = checkTables.rows[0].exists;
+
+            if (!tablesExist) {
+                console.log('📝 Creando tablas...');
+                const sqlPath = path.join(__dirname, 'database', 'init.sql');
+                const sql = fs.readFileSync(sqlPath, 'utf8');
+                await db.query(sql);
+                console.log('✅ Base de datos inicializada correctamente');
+            } else {
+                console.log('✅ Las tablas ya existen');
+            }
+        } catch (error) {
+            console.error('⚠️ Error al inicializar base de datos:', error.message);
+            console.log('⚠️ Continuando sin inicialización automática...');
+        }
+    }
 });
+
 
 // Importar rutas
 const productoRoutes = require('./src/routes/productos.routes');
