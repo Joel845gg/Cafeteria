@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import './MenuPage.css';
 import MenuItem from '../components/MenuItem';
 import CartModal from '../components/CartModal';
@@ -34,7 +34,7 @@ const categories = [
 ];
 
 function MenuPage() {
-    const navigate = useNavigate();
+
     const [activeCategory, setActiveCategory] = useState(1);
     const { addToCart, isCartOpen, setIsCartOpen, clearCart } = useCart();
     const [products, setProducts] = useState([]);
