@@ -35,17 +35,99 @@ const categories = [
 
 function MenuPage() {
     const navigate = useNavigate();
-    const activeCategory = useState(1)[0]; // Fix: useState returns [state, setState]. Original code had setActiveCategory but not used except in onClick. 
-    // Wait, original code: const [activeCategory, setActiveCategory] = useState(1);
-    // My replacement below must be careful not to break state.
-    // I should only replace the necessary parts if I can't copy the whole file reliably.
-    // The previous view_file showed the whole file. I will copy it and just change the URL.
+    const [activeCategory, setActiveCategory] = useState(1);
+    const { addToCart, isCartOpen, setIsCartOpen, clearCart } = useCart();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    // Check line 36 in original: const [activeCategory, setActiveCategory] = useState(1);
-    // My thought process trace indicates I should use the original content.
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/productos`);
+                setProducts(res.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
+
+    // Filtrar productos
+    const filteredProducts = products.filter(product => {
+        const matchesCategory = product.categoria_id === activeCategory;
+        const matchesSearch = product.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
+    const currentCategory = categories.find(c => c.id === activeCategory);
+
     return (
-        <OriginalContentButModified /> // Placeholder, I will provide the full content in the actual tool call
+        <div className="menu-page">
+            <header className="menu-header">
+                <div className="header-content">
+                    <img src={logo} alt="Sakura Coffee" className="header-logo" />
+                    <div className="search-bar">
+                        <input
+                            type="text"
+                            placeholder="Buscar en el menú..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </header>
+
+            <div className="categories-scroll">
+                {categories.map(category => (
+                    <button
+                        key={category.id}
+                        className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
+                        onClick={() => setActiveCategory(category.id)}
+                    >
+                        <span className="cat-icon">{category.icon}</span>
+                        {category.nombre}
+                    </button>
+                ))}
+            </div>
+
+            <main className="menu-content">
+                <h2 className="category-title">
+                    {currentCategory?.nombre}
+                </h2>
+
+                {loading ? (
+                    <p>Cargando menú...</p>
+                ) : (
+                    <div className="products-grid">
+                        {filteredProducts.length > 0 ? (
+                            filteredProducts.map(product => (
+                                <MenuItem
+                                    key={product.id}
+                                    item={product}
+                                    onAddToCart={() => {
+                                        addToCart(product);
+                                        setIsCartOpen(true);
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <p className="no-products">No hay productos en esta categoría.</p>
+                        )}
+                    </div>
+                )}
+            </main>
+
+            {isCartOpen && (
+                <CartModal
+                    onClose={() => setIsCartOpen(false)}
+                    onClearCart={clearCart}
+                />
+            )}
+        </div>
     );
 }
 
-// ... actual tool call content ...
+export default MenuPage;
