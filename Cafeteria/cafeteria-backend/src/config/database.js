@@ -11,8 +11,8 @@ const pool = new Pool({
         password: process.env.PG_PASSWORD,
         port: process.env.PG_PORT || 5432,
     }),
-    // SSL requerido para producción (Railway lo necesita)
-    ...(process.env.NODE_ENV === 'production' && {
+    // SSL requerido para producción (Railway lo necesita si usas su DB interna)
+    ...((process.env.NODE_ENV === 'production' || process.env.DATABASE_URL) && {
         ssl: {
             rejectUnauthorized: false
         }
