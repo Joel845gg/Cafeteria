@@ -8,7 +8,16 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // Configurar axios por defecto
-    axios.defaults.baseURL = 'http://localhost:5000';
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    // Remove /api from base URL because axios endpoints usually include it or not?
+    // Wait, AuthContext uses /api/auth/login.
+    // If API_URL is .../api, then axios.post('/api/auth/login') would be .../api/api/auth/login?
+    // Let's check AuthContext login call: axios.post('/api/auth/login', ...)
+    // So baseURL should be just the host.
+
+    // Correction:
+    const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+    axios.defaults.baseURL = BASE_URL;
 
     useEffect(() => {
         const checkAuth = async () => {

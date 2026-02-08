@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import '../DashboardLayout.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function InventarioAdmin() {
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ function InventarioAdmin() {
 
     const cargarProductos = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/productos');
+            const res = await fetch(`${API_URL}/productos`);
             const data = await res.json();
             if (data.success) {
                 setProductos(data.data);
@@ -41,8 +43,8 @@ function InventarioAdmin() {
         e.preventDefault();
         const token = sessionStorage.getItem('token');
         const url = editingProduct
-            ? `http://localhost:5000/api/productos/${editingProduct.id}`
-            : 'http://localhost:5000/api/productos';
+            ? `${API_URL}/productos/${editingProduct.id}`
+            : `${API_URL}/productos`;
 
         const method = editingProduct ? 'PUT' : 'POST';
 
@@ -74,7 +76,7 @@ function InventarioAdmin() {
 
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/productos/${id}`, {
+            const res = await fetch(`${API_URL}/productos/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

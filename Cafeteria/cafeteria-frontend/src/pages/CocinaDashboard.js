@@ -5,6 +5,9 @@ import './CocinaDashboard.css';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const SOCKET_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+
 function CocinaDashboard() {
     const { logout } = useAuth();
     const [pedidos, setPedidos] = useState([]);
@@ -13,7 +16,7 @@ function CocinaDashboard() {
     const cargarDatos = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/cocina/pedidos', {
+            const res = await fetch(`${API_URL}/cocina/pedidos`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -32,7 +35,7 @@ function CocinaDashboard() {
     useEffect(() => {
         cargarDatos();
 
-        const socket = io('http://localhost:5000');
+        const socket = io(SOCKET_URL);
 
         socket.on('nuevo_pedido_cocina', () => {
             toast('🔥 Nuevo pedido para preparar', { icon: '👨‍🍳' });
@@ -50,7 +53,7 @@ function CocinaDashboard() {
         const nuevoEstado = estadoActual === 'pendiente_preparacion' ? 'preparando' : 'listo';
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/cocina/pedidos/${id}/${nuevoEstado}`, {
+            const res = await fetch(`${API_URL}/cocina/pedidos/${id}/${nuevoEstado}`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

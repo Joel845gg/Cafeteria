@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import '../DashboardLayout.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function HistorialPedidos() {
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ function HistorialPedidos() {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/admin/pedidos', {
+            const res = await fetch(`${API_URL}/admin/pedidos`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -35,7 +37,7 @@ function HistorialPedidos() {
     const handleStatusChange = async (pedidoId, nuevoEstado) => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/admin/pedidos/${pedidoId}/estado`, {
+            const res = await fetch(`${API_URL}/admin/pedidos/${pedidoId}/estado`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
