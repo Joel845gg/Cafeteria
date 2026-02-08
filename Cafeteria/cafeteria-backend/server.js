@@ -78,6 +78,31 @@ db.testConnection().then(async (isConnected) => {
             } else {
                 console.log('✅ Las tablas ya existen');
             }
+
+            // Verificar cantidad de productos y agregar faltantes si es necesario
+            const countProducts = await db.query('SELECT COUNT(*) as total FROM productos');
+            const totalProducts = parseInt(countProducts.rows[0].total);
+
+            console.log(`📊 Productos actuales: ${totalProducts}`);
+
+            if (totalProducts < 78) {
+                console.log('🔄 Agregando productos faltantes...');
+                const addProductsPath = path.join(__dirname, 'database', 'add_missing_products.sql');
+
+                if (fs.existsSync(addProductsPath)) {
+                    const addProductsSql = fs.readFileSync(addProductsPath, 'utf8');
+                    await db.query(addProductsSql);
+
+                    // Verificar nuevamente
+                    const newCount = await db.query('SELECT COUNT(*) as total FROM productos');
+                    const newTotal = parseInt(newCount.rows[0].total);
+                    console.log(`✅ Productos actualizados: ${newTotal} productos`);
+                } else {
+                    console.log('⚠️ Archivo add_missing_products.sql no encontrado');
+                }
+            } else {
+                console.log('✅ Todos los productos están presentes');
+            }
         } catch (error) {
             console.error('⚠️ Error al inicializar base de datos:', error.message);
             console.log('⚠️ Continuando sin inicialización automática...');
