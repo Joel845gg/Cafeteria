@@ -45,7 +45,9 @@ function MenuPage() {
         const fetchProducts = async () => {
             try {
                 const res = await axios.get(`${API_URL}/productos`);
-                setProducts(res.data);
+                // La API devuelve { success: true, data: [...] }
+                const data = res.data.data || res.data;
+                setProducts(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {
