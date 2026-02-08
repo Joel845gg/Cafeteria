@@ -46,8 +46,8 @@ function MenuPage() {
             try {
                 const res = await axios.get(`${API_URL}/productos`);
                 // La API devuelve { success: true, data: [...] }
-                const data = res.data.data || res.data;
-                setProducts(Array.isArray(data) ? data : []);
+                const productsData = res.data.data || res.data;
+                setProducts(Array.isArray(productsData) ? productsData : []);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {

@@ -16,8 +16,7 @@ export const AuthProvider = ({ children }) => {
     // So baseURL should be just the host.
 
     // Correction:
-    const BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-    axios.defaults.baseURL = BASE_URL;
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
     useEffect(() => {
         const checkAuth = async () => {
