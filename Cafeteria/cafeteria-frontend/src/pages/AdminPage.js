@@ -6,6 +6,8 @@ import InventarioAdmin from './InventarioAdmin';
 import HistorialPedidos from './HistorialPedidos';
 import UsuariosAdmin from './UsuariosAdmin';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function AdminPage() {
     const { user, logout } = useAuth();
     const [estadisticas, setEstadisticas] = useState(null);
@@ -25,7 +27,7 @@ function AdminPage() {
         try {
             setRefreshing(true);
             const token = sessionStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/admin/estadisticas', {
+            const response = await fetch(`${API_URL}/admin/estadisticas`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();

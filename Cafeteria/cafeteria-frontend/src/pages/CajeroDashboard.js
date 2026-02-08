@@ -5,6 +5,9 @@ import './CajeroDashboard.css';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const SOCKET_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+
 function CajeroDashboard() {
     const { logout } = useAuth();
     const [pedidos, setPedidos] = useState([]);
@@ -15,7 +18,7 @@ function CajeroDashboard() {
     const cargarDatos = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/cajero/pedidos', {
+            const res = await fetch(`${API_URL}/cajero/pedidos`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -30,7 +33,7 @@ function CajeroDashboard() {
     useEffect(() => {
         cargarDatos();
 
-        const socket = io('http://localhost:5000');
+        const socket = io(SOCKET_URL);
 
         socket.on('connect', () => console.log('🟢 Conectado a WebSocket'));
 
@@ -50,7 +53,7 @@ function CajeroDashboard() {
     const procesarPedido = async (id, accion) => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/cajero/pedidos/${id}/${accion}`, {
+            const res = await fetch(`${API_URL}/cajero/pedidos/${id}/${accion}`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

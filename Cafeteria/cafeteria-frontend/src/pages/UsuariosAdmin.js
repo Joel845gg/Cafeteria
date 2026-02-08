@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import '../DashboardLayout.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function UsuariosAdmin() {
     const [usuarios, setUsuarios] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ function UsuariosAdmin() {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/admin/usuarios', {
+            const res = await fetch(`${API_URL}/admin/usuarios`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -43,7 +45,7 @@ function UsuariosAdmin() {
     const handleActualizarRol = async (id, nuevoRol) => {
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/admin/usuarios/${id}`, {
+            const res = await fetch(`${API_URL}/admin/usuarios/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ function UsuariosAdmin() {
         e.preventDefault();
         try {
             const token = sessionStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/admin/usuarios', {
+            const res = await fetch(`${API_URL}/admin/usuarios`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
