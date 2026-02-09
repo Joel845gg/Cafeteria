@@ -43,6 +43,11 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos (imágenes)
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+
 // Test database connection on startup
 db.testConnection().then(isConnected => {
     if (!isConnected) {

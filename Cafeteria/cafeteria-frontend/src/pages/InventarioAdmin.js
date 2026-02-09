@@ -15,8 +15,10 @@ function InventarioAdmin() {
         precio: '',
         categoria_id: 1, // Default a 'Cafés' o lo que sea ID 1
         stock: 0,
-        activo: true
+        activo: true,
+        imagen: null
     });
+    const [previewImage, setPreviewImage] = useState(null);
 
     const cargarProductos = async () => {
         try {
@@ -46,23 +48,36 @@ function InventarioAdmin() {
 
         const method = editingProduct ? 'PUT' : 'POST';
 
+        // Usar FormData para enviar archivos
+        const data = new FormData();
+        data.append('nombre', formData.nombre);
+        data.append('descripcion', formData.descripcion);
+        data.append('precio', formData.precio);
+        data.append('categoria_id', formData.categoria_id);
+        data.append('stock', formData.stock);
+        data.append('activo', formData.activo);
+
+        if (formData.imagen) {
+            data.append('imagen', formData.imagen);
+        }
+
         try {
             const res = await fetch(url, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
+                    // No poner Content-Type aquí, el navegador lo pone automáticamente con boundary
                 },
-                body: JSON.stringify(formData)
+                body: data
             });
-            const data = await res.json();
+            const responseData = await res.json();
 
-            if (data.success) {
+            if (responseData.success) {
                 toast.success(editingProduct ? 'Producto actualizado' : 'Producto creado');
                 cargarProductos();
                 closeModal();
             } else {
-                toast.error(data.message || 'Error al guardar');
+                toast.error(responseData.message || 'Error al guardar');
             }
         } catch (error) {
             toast.error('Error de conexión');
@@ -100,8 +115,11 @@ function InventarioAdmin() {
                 precio: producto.precio,
                 categoria_id: producto.categoria_id,
                 stock: producto.stock || 0,
-                activo: producto.activo
+                activo: producto.activo,
+                imagen: null
             });
+            // Si tiene imagen URL guardada, podríamos mostrarla, pero por ahora solo preview de nueva
+            setPreviewImage(producto.imagen_url ? `http://localhost:5000${producto.imagen_url}` : null);
         } else {
             setEditingProduct(null);
             setFormData({
@@ -110,10 +128,20 @@ function InventarioAdmin() {
                 precio: '',
                 categoria_id: 1,
                 stock: 0,
-                activo: true
+                activo: true,
+                imagen: null
             });
+            setPreviewImage(null);
         }
         setShowModal(true);
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFormData({ ...formData, imagen: file });
+            setPreviewImage(URL.createObjectURL(file));
+        }
     };
 
     const closeModal = () => {
@@ -146,8 +174,19 @@ function InventarioAdmin() {
                             {productos.map(p => (
                                 <tr key={p.id}>
                                     <td>
-                                        <strong>{p.nombre}</strong><br />
-                                        <small>{p.descripcion}</small>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            {p.imagen_url && (
+                                                <img
+                                                    src={`http://localhost:5000${p.imagen_url}`}
+                                                    alt={p.nombre}
+                                                    style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }}
+                                                />
+                                            )}
+                                            <div>
+                                                <strong>{p.nombre}</strong><br />
+                                                <small>{p.descripcion}</small>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>${parseFloat(p.precio).toFixed(2)}</td>
                                     <td>{p.stock}</td>
@@ -184,9 +223,27 @@ function InventarioAdmin() {
                             <div className="form-group">
                                 <label>Descripción</label>
                                 <textarea
-                                    value={formData.descripcion}
                                     onChange={e => setFormData({ ...formData, descripcion: e.target.value })}
                                 />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Imagen del Producto</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="file-input"
+                                />
+                                {previewImage && (
+                                    <div className="image-preview" style={{ marginTop: '10px' }}>
+                                        <img
+                                            src={previewImage}
+                                            alt="Vista previa"
+                                            style={{ maxHeight: '150px', borderRadius: '8px', objectFit: 'cover' }}
+                                        />
+                                    </div>
+                                )}
                             </div>
                             <div className="grid-2">
                                 <div className="form-group">

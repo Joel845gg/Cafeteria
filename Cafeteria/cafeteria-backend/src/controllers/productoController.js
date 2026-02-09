@@ -10,9 +10,9 @@ exports.getProductos = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en getProductos:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al obtener productos' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener productos'
         });
     }
 };
@@ -21,9 +21,9 @@ exports.getProductoById = async (req, res) => {
     try {
         const producto = await Producto.getById(req.params.id);
         if (!producto) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Producto no encontrado' 
+            return res.status(404).json({
+                success: false,
+                message: 'Producto no encontrado'
             });
         }
         res.json({
@@ -32,9 +32,9 @@ exports.getProductoById = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en getProductoById:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al obtener producto' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener producto'
         });
     }
 };
@@ -42,7 +42,7 @@ exports.getProductoById = async (req, res) => {
 exports.getProductosByCategoria = async (req, res) => {
     try {
         const productos = await Producto.getByCategoria(req.params.categoriaId);
-        
+
         res.json({
             success: true,
             count: productos.length,
@@ -50,9 +50,9 @@ exports.getProductosByCategoria = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en getProductosByCategoria:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al obtener productos por categoría' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener productos por categoría'
         });
     }
 };
@@ -67,9 +67,9 @@ exports.getDestacados = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en getDestacados:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al obtener productos destacados' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener productos destacados'
         });
     }
 };
@@ -78,9 +78,9 @@ exports.searchProductos = async (req, res) => {
     try {
         const { q } = req.query;
         if (!q) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Parámetro de búsqueda requerido' 
+            return res.status(400).json({
+                success: false,
+                message: 'Parámetro de búsqueda requerido'
             });
         }
         const productos = await Producto.search(q);
@@ -91,16 +91,23 @@ exports.searchProductos = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en searchProductos:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al buscar productos' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al buscar productos'
         });
     }
 };
 
 exports.createProducto = async (req, res) => {
     try {
-        const nuevoProducto = await Producto.create(req.body);
+        const productoData = req.body;
+
+        // Si hay archivo, agregar URL
+        if (req.file) {
+            productoData.imagen_url = `/uploads/${req.file.filename}`;
+        }
+
+        const nuevoProducto = await Producto.create(productoData);
         res.status(201).json({
             success: true,
             message: 'Producto creado exitosamente',
@@ -108,20 +115,27 @@ exports.createProducto = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en createProducto:', error);
-        res.status(400).json({ 
-            success: false, 
-            message: error.message 
+        res.status(400).json({
+            success: false,
+            message: error.message
         });
     }
 };
 
 exports.updateProducto = async (req, res) => {
     try {
-        const productoActualizado = await Producto.update(req.params.id, req.body);
+        const productoData = req.body;
+
+        // Si hay archivo, agregar URL
+        if (req.file) {
+            productoData.imagen_url = `/uploads/${req.file.filename}`;
+        }
+
+        const productoActualizado = await Producto.update(req.params.id, productoData);
         if (!productoActualizado) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Producto no encontrado' 
+            return res.status(404).json({
+                success: false,
+                message: 'Producto no encontrado'
             });
         }
         res.json({
@@ -131,9 +145,9 @@ exports.updateProducto = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en updateProducto:', error);
-        res.status(400).json({ 
-            success: false, 
-            message: error.message 
+        res.status(400).json({
+            success: false,
+            message: error.message
         });
     }
 };
@@ -147,9 +161,9 @@ exports.deleteProducto = async (req, res) => {
         });
     } catch (error) {
         console.error('Error en deleteProducto:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al eliminar producto' 
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar producto'
         });
     }
 };
